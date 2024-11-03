@@ -11,6 +11,7 @@ import lombok.Setter;
 public class MenuRequest {
     private Long id;
     private String name;
+    private String icon;
     private String url;
     private Status status;
     private Long parentId;

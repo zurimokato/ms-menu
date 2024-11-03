@@ -15,6 +15,7 @@ import java.util.List;
 public class Menu {
     private Long id;
     private String name;
+    private String icon;
     private String url;
     private Status status;
     private Menu parent;

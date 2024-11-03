@@ -37,8 +37,14 @@ public class MenuService implements FindMenuUseCase, SaveMenuUseCase {
 
     @Override
     public Menu save(Menu menu) {
-        Menu parent=menuOutPutPort.getMenuById(menu.getParent().getId());
-        menu.setParent(parent);
+        if(menu.getParent().getId()!=null) {
+            Menu parent = menuOutPutPort.getMenuById(menu.getParent().getId());
+            parent.getChildren().add(menu);
+            menu.setParent(parent);
+        }else{
+            menu.setParent(null);
+        }
+
         return menuOutPutPort.saveMenu( menu);
     }
 

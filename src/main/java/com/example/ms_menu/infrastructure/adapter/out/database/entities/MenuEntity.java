@@ -21,6 +21,8 @@ public class MenuEntity implements Serializable {
     private Long id;
     @Column(name = "menu_name")
     private String name;
+    @Column(name = "menu_icon")
+    private String icon;
     @Column(name = "menu_url")
     private String url;
     @Column()

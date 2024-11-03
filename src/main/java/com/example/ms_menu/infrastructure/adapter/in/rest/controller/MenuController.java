@@ -9,6 +9,8 @@ import com.example.ms_menu.infrastructure.adapter.in.rest.controller.response.Ge
 import com.example.ms_menu.infrastructure.adapter.in.rest.controller.response.MenuResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,7 @@ public class MenuController  implements MenuAPIPort {
 
     private final MenuRestMapper menuRestMapper;
     @Override
+    @Cacheable(value = "menus")
     public GenericResponse getMenus(Pageable pageable) {
         Page<MenuResponse> menuPage=findMenuUseCase.getMenus(pageable).
                 map(menuRestMapper::toResponse);
@@ -34,6 +37,7 @@ public class MenuController  implements MenuAPIPort {
     }
 
     @Override
+    @Cacheable(value = "menus", key = "#query")
     public GenericResponse findMenu(MenuRequest query, Pageable pageable) {
         Page<MenuResponse> menuPage=findMenuUseCase.getMenusByCriteria(menuRestMapper.toDomain(query),pageable).
                 map(menuRestMapper::toResponse);
@@ -44,6 +48,7 @@ public class MenuController  implements MenuAPIPort {
     }
 
     @Override
+    @Cacheable(value = "menus", key = "#id")
     public GenericResponse findMenuById(Long id) {
         MenuResponse menuResponse=menuRestMapper.toResponse(
                 findMenuUseCase.getMenuById(id)
@@ -54,6 +59,7 @@ public class MenuController  implements MenuAPIPort {
     }
 
     @Override
+    @CacheEvict(value = "menus", allEntries = true)
     public GenericResponse createMenu(MenuRequest query) {
         MenuResponse menuResponse=menuRestMapper.toResponse(
                 saveMenuUseCase.save(menuRestMapper.toDomain(query))
@@ -64,6 +70,7 @@ public class MenuController  implements MenuAPIPort {
     }
 
     @Override
+    @CacheEvict(value = "menus", allEntries = true)
     public GenericResponse updateMenu(MenuRequest query) {
         MenuResponse menuResponse=menuRestMapper.toResponse(
                 saveMenuUseCase.update(menuRestMapper.toDomain(query))
