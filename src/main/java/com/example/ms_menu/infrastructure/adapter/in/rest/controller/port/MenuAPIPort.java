@@ -13,7 +13,7 @@ public interface MenuAPIPort {
     GenericResponse getMenus(Pageable pageable);
 
     @GetMapping("/find")
-    GenericResponse findMenu(@RequestParam MenuRequest query, Pageable pageable);
+    GenericResponse findMenu(@ModelAttribute  MenuRequest query, Pageable pageable);
 
     @GetMapping("/{id}")
     GenericResponse findMenuById(@PathVariable Long id);
@@ -24,5 +24,7 @@ public interface MenuAPIPort {
     @PutMapping
     GenericResponse updateMenu(@Valid @RequestBody MenuRequest query);
 
+    @GetMapping("/list")
+    GenericResponse getMenus();
 
 }

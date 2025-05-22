@@ -11,6 +11,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -27,12 +29,25 @@ public class MenuService implements FindMenuUseCase, SaveMenuUseCase {
 
     @Override
     public Page<Menu> getMenusByCriteria(Menu criteria, Pageable pageable) {
-        return null;
+        Page<Menu> menuPage = menuOutPutPort.getMenusByCriteria(criteria,pageable);
+        if(menuPage.isEmpty()){
+            throw new EntityNotFoundException();
+        }
+        return menuPage;
     }
 
     @Override
     public Menu getMenuById(Long id) {
         return menuOutPutPort.getMenuById(id);
+    }
+
+    @Override
+    public List<Menu> getMenus() {
+        List<Menu>menusList=menuOutPutPort.getMenus();
+        if(menusList.isEmpty()){
+            throw new EntityNotFoundException();
+        }
+        return menusList;
     }
 
     @Override

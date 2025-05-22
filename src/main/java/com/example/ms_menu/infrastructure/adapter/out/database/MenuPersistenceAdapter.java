@@ -2,13 +2,18 @@ package com.example.ms_menu.infrastructure.adapter.out.database;
 
 import com.example.ms_menu.application.port.out.MenuOutPutPort;
 import com.example.ms_menu.domain.model.Menu;
+import com.example.ms_menu.infrastructure.adapter.out.database.entities.MenuEntity;
 import com.example.ms_menu.infrastructure.adapter.out.database.mapper.MenuEntityMapper;
 import com.example.ms_menu.infrastructure.adapter.out.database.repositories.MenuRepository;
+import com.example.ms_menu.infrastructure.adapter.out.database.repositories.specifications.MenuSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -25,7 +30,8 @@ public class MenuPersistenceAdapter implements MenuOutPutPort {
 
     @Override
     public Page<Menu> getMenusByCriteria(Menu menu, Pageable pageable) {
-        return null;
+        Specification<MenuEntity> spec = MenuSpecification.filterMenus(menu);
+        return menuRepository.findAll(spec, pageable).map(menuEntityMapper::toDomain);
     }
 
     @Override
@@ -42,5 +48,10 @@ public class MenuPersistenceAdapter implements MenuOutPutPort {
                 menuEntityMapper.toDomain(
                         menuRepository.save(menuEntityMapper.toEntity(menu))
                 );
+    }
+
+    @Override
+    public List<Menu> getMenus() {
+        return menuRepository.findAll().stream().map(menuEntityMapper::toDomain).toList();
     }
 }
